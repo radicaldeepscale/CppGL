@@ -1,0 +1,26 @@
+[Mouse Action]
+Left Button      : rotate around X/Y axis (or stretching box)
+Right Button     : move object (or box)
+Middle Button    : toggle lighting (or change lighting position)
+Ctrl+Left Button : rotate around Z axis
+Ctrl+Right Button: zoom in/out object (or box) 
+
+[Keyboard Mapping]
+Home             : reset scene
+Page Down        : end the session
+Space            : go to next task
+F10              : toggle box showing 
+F9               : toggle box culling
+F8               : toggle box scaling limit
+F7               : toggle front face hint
+F6               : toggle orientation gadget showing
+F5               : toggle synchronization(in multiview mode)
+F1               : toggle interaction prompt text
+o                : toggle DWI image embedding
+p                : previous DWI image
+n                : next DWI image
+m                : alternating color encoding
+d                : toggle color/monochromatic rendering
+g                : randomly change uniform color
+b                : randomly change box color
+r                : switch between selection/removal mode of box
