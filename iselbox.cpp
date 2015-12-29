@@ -15,6 +15,26 @@ using namespace std;
 //////////////////////////////////////////////////////////////////////////////
 // implementation of struct face_t
 
+_face_t::_face_t(const _face_t& other)
+{
+	pvs = NULL;
+	wps = NULL;
+	isSelected = false;
+}
+
+_face_t& _face_t::operator = (const _face_t& other)
+{
+	// vertex index store is also to be reconstructed
+	vidxs.clear();
+	// face must be associated with an object who will give the pointer to the
+	// real storage of vertices as follows, just copying the pointers is
+	// detrimental
+	pvs = NULL;
+	wps = NULL;
+	isSelected = false;
+	return *this;
+}
+
 void _face_t::setSelected(bool bSelected )
 {
 	isSelected = bSelected;
@@ -162,11 +182,7 @@ GLdouble _face_t::getNearestZ(GLdouble x, GLdouble y)
 //////////////////////////////////////////////////////////////////////////////
 // class implementation of CIselbox
 //
-<<<<<<< HEAD
 CIselbox::CIselbox() :
-=======
-CIselbox::CIselbox(ostream* pcout) :
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	m_minx(0xffffffff),	
 	m_miny(0xffffffff),	
 	m_minz(0xffffffff),	
@@ -182,19 +198,105 @@ CIselbox::CIselbox(ostream* pcout) :
 	m_pvertices(NULL),
 	m_pedgeflags(NULL),
 	m_dx(0),m_dy(0),m_dz(0),
-<<<<<<< HEAD
 	m_bmvlimit(true),
 	m_bhint(true) 
 {
 }
 
+CIselbox::CIselbox(const CIselbox& other)
+{
+	/* it is never reasonable to coarsely copy following member data 
+	 * ,which accounts for the initialization as follows just like it was
+	 * treated in the default constructor
+	 */ 
+	m_pressedbtn = -1;
+	m_selectedFid = -1;
+	m_highlightedFid = -1;
+	m_nearestZ = .0;
+	m_mx = 0, m_my = 0, m_mz = 0;
+	m_bmvlimit = true;
+	m_bhint = true;
+	m_pvertices = NULL;
+	m_pedgeflags = NULL;
+	/* particularly for this specific class, following duplication should be
+	 * rational to make
+	 */
+	m_fcr = other.m_fcr;
+	m_fcg = other.m_fcg;
+	m_fcb = other.m_fcb;
+	m_dx = other.m_dx;
+	m_dy = other.m_dy;
+	m_dz = other.m_dz;
+	m_cout = other.m_cout;
+	/* it is a crux to reconstruct faces and box vertices after being assigned a
+	 * set of new corners
+	 */
+	setMinMax( other.m_minx, other.m_miny, other.m_minz, 
+		other.m_maxx, other.m_maxy, other.m_maxz);
+}
+
 CIselbox::~CIselbox()
 {
-=======
-	m_pcout(pcout),
-	m_bmvlimit(true),
-	m_bhint(true) {
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
+}
+
+CIselbox& CIselbox::operator = (const CIselbox& other)
+{
+	this->m_minx = other.m_minx;
+	this->m_miny = other.m_miny;
+	this->m_minz = other.m_minz;
+	this->m_maxx = other.m_maxx;
+	this->m_maxy = other.m_maxy;
+	this->m_maxz = other.m_maxz;
+
+	// for CIselbox, m_boxvertices, m_winboxvertices and m_faces are all
+	// reconstructed instantly from the coordinates fo the two opposite
+	// corners, it is meaningless or even pernicious to simply copy from other
+	// instance
+	/*
+	this->m_boxvertices.resize( other.m_boxvertices.size() );
+	std::copy(other.m_boxvertices.begin(), other.m_boxvertices.end(),
+			this->m_boxvertices.begin());
+
+	this->m_winboxvertices.resize( other.m_winboxvertices.size() );
+	std::copy(other.m_winboxvertices.begin(), other.m_winboxvertices.end(),
+			this->m_winboxvertices.begin());
+
+	this->m_faces.resize( other.m_faces.size() );
+	std::copy(other.m_faces.begin(), other.m_faces.end(),
+			this->m_faces.begin());
+	*/
+	this->m_fcr = other.m_fcr;
+	this->m_fcg = other.m_fcg;
+	this->m_fcb = other.m_fcb;
+
+	this->m_pvertices = other.m_pvertices;
+	this->m_pedgeflags = other.m_pedgeflags;
+	this->m_dx = other.m_dx;
+	this->m_dy = other.m_dy;
+	this->m_dz = other.m_dz;
+
+	this->m_cout = other.m_cout;
+	this->m_bmvlimit = other.m_bmvlimit;
+	this->m_bhint = other.m_bhint;
+
+	/* since already armed with new corners, faces and box vertices all need
+	 * updating
+	 */
+	m_boxvertices.clear();
+	m_winboxvertices.clear();
+	m_faces.clear();
+	m_boxvertices.resize(8);
+	m_winboxvertices.resize(8);
+	_initFaces();
+	_onMinMaxUpdated();
+
+	m_pressedbtn = -1;
+	m_selectedFid = -1;
+	m_highlightedFid = -1;
+	m_nearestZ = .0;
+	m_mx = 0, m_my = 0, m_mz = 0;
+
+	return *this;
 }
 
 /* ---------------------------------------
@@ -302,11 +404,7 @@ int CIselbox::refreshEdgeFlags()
 			ret ++;
 		}
 	}
-<<<<<<< HEAD
 	m_cout << ret << " points culled due to changes in edge flags\n";
-=======
-	(*m_pcout) << ret << " points culled due to changes in edge flags\n";
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	return ret;
 }
 
@@ -398,6 +496,25 @@ bool CIselbox::switchHint()
 	return m_bhint;
 }
 
+CIselbox CIselbox::clone(GLdouble dx, GLdouble dy, GLdouble dz)
+{
+	CIselbox other(*this);
+
+	if ( 0 == dx && 0 == dy && 0 == dz ) {
+		dx = dy = dz = max( (m_maxx - m_minx), 
+				max( (m_maxy - m_miny), (m_maxz - m_minz) ) );
+	}
+
+	other.m_minx += dx;
+	other.m_miny += dy;
+	other.m_minz += dz;
+	other.m_maxx += dx;
+	other.m_maxy += dy;
+	other.m_maxz += dz;
+
+	return other;
+}
+
 int CIselbox::onMouseClicked(int button, int state, 
 								int x, int y)
 {
@@ -412,29 +529,17 @@ int CIselbox::onMouseClicked(int button, int state,
 
 		m_selectedFid  = getSelectedFace(x,y);
 		if ( -1 == m_selectedFid ) {
-<<<<<<< HEAD
 			m_cout << "no face selected.\n";
 			return 1;
 		}
 		m_cout << "(" << x << "," << y << ") falls in face " << m_selectedFid << "\n";
-=======
-			(*m_pcout) << "no face selected.\n";
-			return 1;
-		}
-		(*m_pcout) << "(" << x << "," << y << ") falls in face " << m_selectedFid << "\n";
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 		if ( m_bmvlimit ) {
 			GLdouble ox, oy, oz;
 			m_nearestZ = m_faces[m_selectedFid].getNearestZ(x,y);
 
 			_wincoord2objcoord(x, y, m_nearestZ, &ox, &oy, &oz);
-<<<<<<< HEAD
 			//m_cout << "nearestZ = " << m_nearestZ << "\n";
 			//m_cout << "ox=" << ox << ",oy=" << oy << ", oz=" << oz << "\n";
-=======
-			//(*m_pcout) << "nearestZ = " << m_nearestZ << "\n";
-			//(*m_pcout) << "ox=" << ox << ",oy=" << oy << ", oz=" << oz << "\n";
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 
 			m_mx = ox, m_my = oy, m_mz = oz;
 		}
@@ -451,23 +556,15 @@ int CIselbox::onMouseClicked(int button, int state,
 	switch (button) {
       case GLUT_LEFT_BUTTON:
          if (state == GLUT_DOWN) {
-<<<<<<< HEAD
 			m_cout << "selbox stretching by mouse.\n";
          }
 		 else {
 			m_cout << "selbox stretching finished.\n";
-=======
-			(*m_pcout) << "selbox stretching by mouse.\n";
-         }
-		 else {
-			(*m_pcout) << "selbox stretching finished.\n";
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 		 }
          break;
       case GLUT_MIDDLE_BUTTON:
 		 return 1;
       case GLUT_RIGHT_BUTTON:
-<<<<<<< HEAD
 		 // moving/zooming selection box
          if (state == GLUT_DOWN) {
 			 m_cout << "selbox " <<
@@ -478,23 +575,11 @@ int CIselbox::onMouseClicked(int button, int state,
 			 m_cout << "selbox " <<
 				 (GLUT_ACTIVE_CTRL == glutGetModifiers()?"zooming":"moving")
 				 << " finished.\n";
-=======
-		 // moving selection box
-         if (state == GLUT_DOWN) {
-			 (*m_pcout) << "selbox moving by mouse.\n";
-         }
-		 else if (glIsEnabled( GL_LIGHTING)) {
-			 (*m_pcout) << "selbox moving finished.\n";
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 		 }
          break;
       default:
 		 break;
 	} 
-<<<<<<< HEAD
-=======
-	glutPostRedisplay();
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	return 0;
 }
 
@@ -532,11 +617,7 @@ int CIselbox::onMouseMove(int x, int y)
 		if ( x <= viewport[0] || x >= viewport[2] ||
 			 y <= viewport[1] || y >= viewport[3] ) {
 			m_mx = ox, m_my = oy, m_mz = oz;
-<<<<<<< HEAD
 			m_cout << "selection box stretching out of viewport.\n";
-=======
-			(*m_pcout) << "selection box stretching out of viewport.\n";
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 			return 0;
 		}
 		*/
@@ -667,11 +748,7 @@ int CIselbox::onMousePassiveMove(int x, int y)
 
 	if ( m_highlightedFid != -1 ) {
 		m_faces[m_highlightedFid].setSelected(true);
-<<<<<<< HEAD
 		m_cout << "face " << nhFid << " hightlighted.\n";
-=======
-		(*m_pcout) << "face " << nhFid << " hightlighted.\n";
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 		return 0;
 	}
 
@@ -708,11 +785,7 @@ int CIselbox::_onMinMaxUpdated(int bCheckRange)
 {
 	if ( m_bmvlimit && 0 != bCheckRange ) {
 		if (m_maxx <= m_minx || m_maxy <= m_miny || m_maxz <= m_minz) {
-<<<<<<< HEAD
 			m_cout << "Forbidden: face to impinge over its opposite.\n";
-=======
-			(*m_pcout) << "Forbidden: face to impinge over its opposite.\n";
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 			return -1;
 		}
 	}
@@ -754,11 +827,7 @@ int CIselbox::_onMinMaxUpdated(int bCheckRange)
 				return 0;
 			}
 		}
-<<<<<<< HEAD
 		m_cout << "selection box stretching out of viewport.\n";
-=======
-		(*m_pcout) << "selection box stretching out of viewport.\n";
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 		m_boxvertices = orgBoxVertices;
 		return -1;
 	}
@@ -772,11 +841,7 @@ int CIselbox::_onMinMaxUpdated(int bCheckRange)
 				return 0;
 			}
 		}
-<<<<<<< HEAD
 		m_cout << "selection box getting out of viewport.\n";
-=======
-		(*m_pcout) << "selection box getting out of viewport.\n";
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 		m_boxvertices = orgBoxVertices;
 		return -1;
 	}
@@ -823,11 +888,7 @@ int CIselbox::_objcoord2wincoord()
 				&m_winboxvertices[i].x, &m_winboxvertices[i].y, &m_winboxvertices[i].z);
 		m_winboxvertices[i].y = viewport[3] - (GLint)m_winboxvertices[i].y;
 		if (GL_TRUE != ret) {
-<<<<<<< HEAD
 			m_cout << "FATAL: failed in gluProject for CIselbox::_objcoord2wincoord\n";
-=======
-			(*m_pcout) << "FATAL: failed in gluProject for CIselbox::_objcoord2wincoord\n";
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 			return -1;
 		}
 	}
@@ -855,11 +916,7 @@ int CIselbox::_wincoord2objcoord(
 	if ( GL_TRUE != gluUnProject((GLdouble)winx, (GLdouble)winy, (GLdouble)winz, 
 								mvmat, prjmat, viewport,
 								objx, objy, objz)) {
-<<<<<<< HEAD
 		m_cout << "FATAL: failed in gluUnProject for CIselbox::_wincoord2objcoord\n";
-=======
-		(*m_pcout) << "FATAL: failed in gluUnProject for CIselbox::_wincoord2objcoord\n";
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 		return -1; 
 	}
 

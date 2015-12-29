@@ -48,7 +48,6 @@ _T& myendl(_T& myos);
 
 MyCout::MyCout(bool soff, ostream& os) : 
 	m_switchoff(soff), 
-<<<<<<< HEAD
 	m_btime(false),
 	m_bnewline(true),
 	m_os(os)
@@ -62,11 +61,6 @@ MyCout::MyCout(const MyCout& other) :
 	m_os(other.m_os)
 {
 }
-=======
-	m_os(os)
-{
-}
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	
 void MyCout::switchoff(bool soff) 
 { 
@@ -77,7 +71,6 @@ bool MyCout::isswitchon() const
 {
 	return !m_switchoff;
 }
-<<<<<<< HEAD
 
 void MyCout::switchtime(bool bon)
 {
@@ -129,9 +122,6 @@ MyCout& MyCout::operator = (const MyCout& other)
 	return *this;
 }
 
-=======
-	
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 ///////////////////////////////////////////////////////////////////////////////
 // this the outermost shell to cover the model application described above
 CApplication::CApplication() : 
@@ -217,14 +207,11 @@ int CApplication::addOption(char optname, bool hasarg,
 	return 0;
 }
 
-<<<<<<< HEAD
 void CApplication::setVerinfo(const char* verinfo)
 {
 	m_verinfo = verinfo;
 }
 
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 int CApplication::run(bool noopt) 
 {
 	int ret = 1;
@@ -333,14 +320,6 @@ int CApplication::handleOptions( int optv )
 	return 1;
 }
 
-<<<<<<< HEAD
-=======
-void CApplication::setVerinfo(const char* verinfo)
-{
-	m_verinfo = verinfo;
-}
-
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 bool CApplication::_handleLongopts()
 {
 	// every option is optional!

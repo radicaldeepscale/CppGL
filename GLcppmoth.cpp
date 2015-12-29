@@ -98,12 +98,8 @@ CGLApp::CGLApp() : CApplication(),
 	m_centerX(.0), m_centerY(.0), m_centerZ(.0),
 	m_upX(.0), m_upY(1.0), m_upZ(.0),
 	m_dx(0),m_dy(0),m_dz(0),
-<<<<<<< HEAD
 	m_bGadgetEnabled(false),
 	m_bFirstReshape(true)
-=======
-	m_bGadgetEnabled(false)
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 {
 	m_position[0] = .0, m_position[1] = .0, 
 	m_position[2] = m_eyeZ, m_position[3] = .0;
@@ -126,12 +122,8 @@ CGLApp::CGLApp(int argc, char** argv) : CApplication(argc, argv),
 	m_centerX(.0), m_centerY(.0), m_centerZ(.0),
 	m_upX(.0), m_upY(1.0), m_upZ(.0),
 	m_dx(0),m_dy(0),m_dz(0),
-<<<<<<< HEAD
 	m_bGadgetEnabled(false),
 	m_bFirstReshape(true)
-=======
-	m_bGadgetEnabled(false)
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 {
 	m_position[0] = .0, m_position[1] = .0, 
 	m_position[2] = m_eyeZ, m_position[3] = .0;
@@ -308,90 +300,6 @@ void CGLApp::glInit( void )
 	glShadeModel (GL_FLAT);
 }
 
-<<<<<<< HEAD
-=======
-void CGLApp::onReshape ( GLsizei w, GLsizei h )
-{
-	m_width = w, m_height = h;
-	glViewport	( 0, 0, w, h ) ;
-	glMatrixMode  ( GL_PROJECTION ) ;
-	glLoadIdentity( ) ;
-	gluPerspective( m_fvoy, (GLfloat) w/(GLfloat) h, m_near, m_far ) ;
-	m_cout << "in GLAPP: fvoy= " << m_fvoy << " far= " 
-		<< m_far << " near= " << m_near << "\n";
-	glMatrixMode  ( GL_MODELVIEW ) ;
-	glLoadIdentity();
-	gluLookAt(m_eyeX, m_eyeY, m_eyeZ,
-			m_centerX, m_centerY, m_centerZ,
-			m_upX, m_upY, m_upZ);
-}
-
-void CGLApp::mouseResponse(int button, int state, int x, int y)
-{
-	if ( GLUT_DOWN == state ) {
-		m_pressedbtn = button;
-		m_mx = x, m_my = y;
-	}
-	else { // when button has been bounced up again
-		m_pressedbtn = -1;
-	}
-
-	switch (button) {
-      case GLUT_LEFT_BUTTON:
-         if (state == GLUT_DOWN) {
-			m_cout << "rotating by mouse.\n";
-         }
-		 else {
-			m_cout << "rotating finished.\n";
-		 }
-         break;
-      case GLUT_MIDDLE_BUTTON:
-		 // lighting switch on/off and let position follow the mouse
-         if (state == GLUT_DOWN) {
-			if (glIsEnabled( GL_LIGHTING)) {
-				glDisable ( GL_LIGHTING) ;
-				glDisable ( GL_LIGHT0 );
-				m_cout << "Lighting off.\n";
-			}
-			else {
-				glEnable( GL_LIGHTING );
-				glEnable( GL_LIGHT0 );
-				GLdouble a,b,c;
-				_wincoord2objcoord(x,y,0,&a,&b,&c,true);
-				m_position[0]=a, m_position[1]=b;
-				/*
-				m_position[0] = x * 1.0 / m_width ;
-				m_position[1] = y * 1.0 / m_height * (m_width*1.0/m_height);
-				*/
-				glLightfv( GL_LIGHT0, GL_POSITION, m_position ) ;
-				m_cout << "Lighting on, start positioning light source...\n";
-			}
-         }
-		 else if (glIsEnabled( GL_LIGHTING)) {
-			 m_cout << "Light positioning finished, updated to (" <<
-				 m_position[0] << "," << m_position[1] << "," <<
-				 m_position[2] << ")\n";
-		 }
-         break;
-      case GLUT_RIGHT_BUTTON:
-         if (state == GLUT_DOWN) {
-			m_cout << 
-				( GLUT_ACTIVE_SHIFT == glutGetModifiers() ?"Scaling":"Moving") 
-				<< " by mouse.\n";
-         }
-		 else {
-			m_cout << 
-				( GLUT_ACTIVE_SHIFT == glutGetModifiers() ?"Scaling":"Moving") 
-				<< " finished.\n";
-		 }
-         break;
-      default:
-		 return;
-	} 
-	glutPostRedisplay();
-}
-
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 void CGLApp::keyResponse(unsigned char key, int x, int y)
 {
 	switch (key) {
@@ -551,22 +459,6 @@ void CGLApp::keyResponse(unsigned char key, int x, int y)
 		glTranslatef(0.0, 0.0, -0.1);
 		m_cout << "Move forwards.\n";
 		break;
-<<<<<<< HEAD
-=======
-	case 32: // white space
-		{
-			onReshape(m_width, m_height);
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			m_color[0] = .0, m_color[1] = .8, m_color[2] = .0;
-			if (glIsEnabled(GL_LIGHTING) && glIsEnabled(GL_LIGHT0) ) {
-				m_position[0] = .0, m_position[1] = .0, 
-				m_position[2] = m_eyeZ, m_position[3] = .0;
-				glLightfv( GL_LIGHT0, GL_POSITION, m_position ) ;
-			}
-			m_cout << "reset all.\n";
-		}
-		break;
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	case '=': // meant for '+'
 	case '-':
 		{
@@ -613,7 +505,6 @@ void CGLApp::specialResponse(int key, int x, int y)
 		m_cout << "gadgets " << 
 			(m_bGadgetEnabled?"Enabled":"Disabled") << "\n";
 		break;
-<<<<<<< HEAD
 	case GLUT_KEY_HOME:
 		{
 			m_bFirstReshape = true;
@@ -628,15 +519,12 @@ void CGLApp::specialResponse(int key, int x, int y)
 			m_cout << "reset all.\n";
 		}
 		break;
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	default:
 		return;
 	}
 	glutPostRedisplay();
 }
 
-<<<<<<< HEAD
 void CGLApp::mouseResponse(int button, int state, int x, int y)
 {
 	if ( GLUT_DOWN == state ) {
@@ -707,8 +595,6 @@ void CGLApp::mouseResponse(int button, int state, int x, int y)
 	} 
 }
 
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 void CGLApp::mouseMotionResponse(int x, int y)
 {
 	GLdouble dx = x - m_mx, dy = y - m_my, dz = 0.0;
@@ -813,7 +699,6 @@ void CGLApp::mouseWheelRollResponse(int wheel, int direction, int x, int y)
 	}
 }
 
-<<<<<<< HEAD
 void CGLApp::onReshape ( GLsizei w, GLsizei h )
 {
 	m_width = w, m_height = h;
@@ -833,8 +718,6 @@ void CGLApp::onReshape ( GLsizei w, GLsizei h )
 	}
 }
 
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 void CGLApp::display ( void )
 {
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
@@ -922,19 +805,6 @@ int CGLApp::_wincoord2objcoord(
 	return 0;
 }
 
-<<<<<<< HEAD
-=======
-void CGLApp::_mouseResponse(int button, int state, int x, int y)
-{
-	m_pInstance->mouseResponse(button, state, x, y);
-}
-
-void CGLApp::_onReshape( GLsizei w, GLsizei h )
-{
-	m_pInstance->onReshape(w, h);
-}
-
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 void CGLApp::_keyResponse(unsigned char key, int x, int y)
 {
 	m_pInstance->keyResponse(key, x, y);
@@ -945,14 +815,11 @@ void CGLApp::_specialResponse(int key, int x, int y)
 	m_pInstance->specialResponse(key, x, y);
 }
 
-<<<<<<< HEAD
 void CGLApp::_mouseResponse(int button, int state, int x, int y)
 {
 	m_pInstance->mouseResponse(button, state, x, y);
 }
 
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 void CGLApp::_mouseMotionResponse(int x, int y)
 {
 	m_pInstance->mouseMotionResponse(x, y);
@@ -968,14 +835,11 @@ void CGLApp::_mouseWheelRollResponse(int wheel, int direction, int x, int y)
 	m_pInstance->mouseWheelRollResponse(wheel, direction, x, y);
 }
 
-<<<<<<< HEAD
 void CGLApp::_onReshape( GLsizei w, GLsizei h )
 {
 	m_pInstance->onReshape(w, h);
 }
 
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 void CGLApp::_display( void )
 {
 	m_pInstance->display();

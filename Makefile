@@ -1,6 +1,5 @@
 # Makefile for building OpenGL program in C++ 
 #!/usr/bin/make -f  
-<<<<<<< HEAD
 _VERSION_=(64 bit) 1.5.0.0 
 
 INC=-I./ \
@@ -12,18 +11,6 @@ LIB=-L./ \
 FLAGS=-DLINUX -Wall -O3 
 DEBUG=0
 
-=======
-_VERSION_=(64 bit) 1.0.1.0 
-
-INC=-I./ \
-	-I/usr/include \
-	-I./gdcm/include
-LIB=-L./ \
-	-L./gdcm/lib
-# c++0x supports array initialization in constructor
-FLAGS=-DLINUX -Wall -O3 
-DEBUG=0
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 LIBS = /lib64/libdl.so.2 -lgdcmMSFF -lgdcmDSED -lgdcmDICT \
 	   -lgdcmopenjpeg -lgdcmcharls -lgdcmzlib \
 	   -lgdcmjpeg12 -lgdcmjpeg16 -lgdcmjpeg8 \
@@ -34,15 +21,10 @@ LIBS = /lib64/libdl.so.2 -lgdcmMSFF -lgdcmDSED -lgdcmDICT \
 
 CC=g++
 
-<<<<<<< HEAD
 LIBSRCS= mitubeRenderView.cpp mitubeRenderWindow.cpp situbeRender.cpp \
 		GLoader.cpp cppmoth.cpp GLcppmoth.cpp \
 		iselbox.cpp  GLiboxmoth.cpp  GLgadget.cpp DCMviewer.cpp
 
-=======
-LIBSRCS= mitubeRender.cpp situbeRender.cpp GLoader.cpp cppmoth.cpp GLcppmoth.cpp \
-		iselbox.cpp  GLiboxmoth.cpp  GLgadget.cpp DCMviewer.cpp
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 LIBOBJ=$(LIBSRCS:.cpp=.o)
 
 ifneq ($(DEBUG), 0)
@@ -79,11 +61,7 @@ release : rebuild
 
 ###############################################################################
 
-<<<<<<< HEAD
 EXES = singleitr multiviewitr multiwindowitr
-=======
-EXES = singleitr multipleitr
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 ALLSRCS = $(foreach x,$(EXES), ${x}.cpp) $(LIBSRCS)
 ALLOBJS = $(ALLSRCS:.cpp=.o) 
 

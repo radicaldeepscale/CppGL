@@ -117,10 +117,7 @@ void CGLGadget::display()
 	glDisable(GL_LIGHTING);
 	glDisable(GL_LIGHT0);
 
-<<<<<<< HEAD
 	//cout << "USED: (" << m_left << "," << m_bottom << ") - (" << m_width << "," << m_height << ")\n";
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	glViewport(m_left, m_bottom, m_width, m_height);
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
@@ -715,7 +712,6 @@ int CSphereColorMap::_place_a_vertex(int vertexIndex, GLfloat x, GLfloat y, GLfl
 	return 0;
 }
 
-<<<<<<< HEAD
 ///////////////////////////////////////////////////////////////////////////////
 //
 // implementation of the CGLTextbox class
@@ -813,9 +809,13 @@ void CGLTextbox::draw()
 		y = dmin + m_rasterPosOffy,
 		x = -dmin - m_rasterPosOffx;
 	for (size_t i = 0; i < m_lines.size(); ++i) {
-		swap(m_color[0], m_color[2]);
+		/* the sloppy way by swapping can cause flickering effect during scene
+		 * updating, as is quite undesirable.
+		 */
+		//swap(m_color[0], m_color[2]);
 		printText(m_lines[i].c_str(), x, y, 0, 
-				m_color[0], m_color[1], m_color[2], m_color[3],
+				m_color[i%2==0?2:0], m_color[1], 
+				m_color[i%2==0?0:2], m_color[3], 
 				m_font);
 		y -= 1+ystep;
 	}
@@ -980,6 +980,12 @@ bool CGLTaskbox::iscovered() const
 	return m_bShowCover;
 }
 
+bool CGLTaskbox::isPrompt() const
+{
+	// first task is actually a prompt for starting, not a real task
+	return 0 == m_curTaskId;
+}
+
 void CGLTaskbox::_calcViewport()
 {
 	// here it is to anchor each of the CGLTextbox object associated with each
@@ -1018,17 +1024,16 @@ void CGLTaskbox::_calcViewport()
 void CGLTaskbox::_drawcover()
 {
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-	return;
 	// the cover is simply a rectangle covering the whole screen
-	GLfloat clrcolor[4];
+	GLfloat clrcolor[4] = {0.5, 0.1, 0.2, 0.6};
 	glGetFloatv(GL_COLOR_CLEAR_VALUE, clrcolor);
 
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
 	glColor4fv(clrcolor);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glBegin(GL_POLYGON);
-		glVertex3f(0, 0, 0);
-		glVertex3f(m_tw, 0, 0);
+		glVertex3f(-m_tw, -m_th, 0);
+		glVertex3f(m_tw, -m_th, 0);
 		glVertex3f(m_tw, m_th, 0);
 		glVertex3f(0, m_th, 0);
 	glEnd();
@@ -1036,7 +1041,5 @@ void CGLTaskbox::_drawcover()
 	glPopAttrib();
 }
 
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 /* set ts=4 sts=4 tw=80 sw=4 */
 

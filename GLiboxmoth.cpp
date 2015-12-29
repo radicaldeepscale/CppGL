@@ -25,12 +25,8 @@ CGLIBoxApp::CGLIBoxApp() : CGLApp(),
 	m_curhlboxidx(-1),
 	m_pvertices(NULL),
 	m_bIboxEnabled(true),
-<<<<<<< HEAD
 	m_bIboxCulling(true) 
 {
-=======
-	m_bIboxCulling(true) {
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 }
 
 CGLIBoxApp::CGLIBoxApp(int argc, char **argv) : CGLApp(argc, argv),
@@ -44,19 +40,12 @@ CGLIBoxApp::CGLIBoxApp(int argc, char **argv) : CGLApp(argc, argv),
 	m_curhlboxidx(-1),
 	m_pvertices(NULL),
 	m_bIboxEnabled(true),
-<<<<<<< HEAD
 	m_bIboxCulling(true) 
 {
 	// in selection box application, gadgets are often needed since
 	// application in this catalog mostly involves 3D interaction
 	m_bGadgetEnabled = true;
 	m_cout.switchtime(true);
-=======
-	m_bIboxCulling(true) {
-		// in selection box application, gadgets are often needed since
-		// application in this catalog mostly involves 3D interaction
-		m_bGadgetEnabled = true;
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 }
 
 CGLIBoxApp::~CGLIBoxApp()
@@ -161,6 +150,16 @@ void CGLIBoxApp::drawBoxes()
 
 int CGLIBoxApp::addBox(const CIselbox& selbox)
 {
+	if ( !m_bIboxEnabled ) {
+		return -1;
+	}
+	// from the programmability standpoint, any number of selection box is
+	// acceptable but in actuality, too much, over 10 for instance, should be
+	// mischievous and declined therefore
+	if ( m_boxes.size() >= 10 ) {
+		m_cout << "Too many selection boxes while Upper limit is 10.\n";
+		return -1;
+	}
 	m_boxes.push_back( selbox );
 	// the responsiblity of setting the layout for the new selection box is
 	// attributed to the user who creates the instance selbox
@@ -169,22 +168,18 @@ int CGLIBoxApp::addBox(const CIselbox& selbox)
 
 int CGLIBoxApp::addBox()
 {
+	if ( !m_bIboxEnabled ) {
+		return -1;
+	}
 	CIselbox selbox;
 	if ( m_cout.isswitchon() ) {
 		m_cout << "debug output switched on\n";
-<<<<<<< HEAD
 		selbox.m_cout.switchoff(false);
 		selbox.m_cout.switchtime(true);
 	}
 	else {
 		selbox.m_cout.switchoff(true);
 	}	
-=======
-	}
-	else {
-		selbox.m_pcout = &m_cout;
-	}
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	selbox.associateObj(m_pvertices, &m_edgeflags, m_dx, m_dy, m_dz);
 	addBox( selbox );
 	return _updateDefaultLayout();
@@ -192,13 +187,77 @@ int CGLIBoxApp::addBox()
 
 int CGLIBoxApp::removeBox(int idx)
 {
+	if ( !m_bIboxEnabled ) {
+		return -1;
+	}
 	// trivial check against invalid index
 	if (idx < 0 || idx >= static_cast<int>(m_boxes.size()) ) {
-		return -1;
+		if ( -1 == idx ) {
+			if ( -1 != m_curhlboxidx ) {
+				idx = m_curhlboxidx;
+			}
+			else if ( -1 != m_curselboxidx ) {
+				idx = m_curselboxidx;
+			}
+			else if (m_boxes.size() >= 1) {
+				idx = int(m_boxes.size()) - 1;
+			}
+			else {
+				return -1;
+			}
+		}
+		else {
+			return -1;
+		}
 	}
 
 	m_boxes.erase( m_boxes.begin() + idx );
+	// now since the box store has been changed, index to it will also need
+	// changing - elements after idx have been moved forwards by just one
+	// slot, and "This invalidates all iterator and references to elements after
+	// position or first."
+	if ( m_curselboxidx >= idx ) {
+		m_curselboxidx --;
+	}
+	else if ( m_curselboxidx == idx ) {
+		m_curselboxidx = -1;
+	}
+
+	if ( m_curhlboxidx >= idx ) {
+		m_curhlboxidx --;
+	}
+	else if ( m_curhlboxidx == idx ) {
+		m_curhlboxidx = -1;
+	}
+
 	return 0;
+}
+
+int CGLIBoxApp::duplicateBox(GLdouble dx, GLdouble dy, GLdouble dz)
+{
+	if ( !m_bIboxEnabled ) {
+		return -1;
+	}
+	if ( m_boxes.size() < 1 ) {
+		return addBox();
+	}
+
+	int idx = -1;
+	if ( -1 != m_curhlboxidx ) {
+		idx = m_curhlboxidx;
+	}
+	else if ( -1 != m_curselboxidx ) {
+		idx = m_curselboxidx;
+	}
+	else if (m_boxes.size() >= 1) {
+		idx = int(m_boxes.size()) - 1;
+	}
+
+	if (idx >= 0 && idx < static_cast<int>(m_boxes.size()) ) {
+		return addBox( m_boxes[idx].clone(dx, dy, dz) );
+	}
+
+	return idx;
 }
 
 bool CGLIBoxApp::isPointInBox(GLdouble x, GLdouble y, GLdouble z)
@@ -223,59 +282,13 @@ void CGLIBoxApp::glInit(void)
 	CGLApp::glInit();
 }
 
-<<<<<<< HEAD
-=======
-void CGLIBoxApp::mouseResponse(int button, int state, int x, int y)
-{
-	if ( !m_bIboxEnabled ) {
-		CGLApp::mouseResponse(button, state, x, y);
-		return;
-	}
-
-	switch (state) {
-	case GLUT_DOWN: 
-		{
-			m_curselboxidx = -1;
-			// the first selection box that accepts the mouse event is regarded
-			// as the currently focused
-			size_t szBoxes = m_boxes.size();
-			for (size_t idx = 0; idx < szBoxes; idx++) {
-				if ( 0 == m_boxes[idx].onMouseClicked(button, state, x, y) ) {
-					m_curselboxidx = idx;
-					return;
-				}
-			}
-		}
-		break;
-	case GLUT_UP:
-		{
-			if ( -1 != m_curselboxidx ) {
-				m_boxes[ m_curselboxidx ].onMouseClicked( 
-						button, state, 0,0);
-				return;
-			}
-		}
-		break;
-	default:
-		break;
-	}
-
-	CGLApp::mouseResponse(button, state, x, y);
-	return;
-}
-
-void CGLIBoxApp::onReshape( GLsizei w, GLsizei h )
-{
-	CGLApp::onReshape(w, h);
-	// boxes should also be reset 
-	_updateDefaultLayout();
-}
-
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 void CGLIBoxApp::keyResponse(unsigned char key, int x, int y)
 {
 	switch (key) {
 		case 'b':
+			if ( !m_bIboxEnabled ) {
+				return;
+			}
 			_genBoxColors();
 			glutPostRedisplay();
 			return;
@@ -295,19 +308,46 @@ void CGLIBoxApp::specialResponse(int key, int x, int y)
 			glutPostRedisplay();
 			return;
 		case GLUT_KEY_F9:
+			if ( !m_bIboxEnabled ) {
+				return;
+			}
 			m_bIboxCulling = !m_bIboxCulling;
 			m_cout << "box culling " << 
 				(m_bIboxCulling?"on":"off") << "\n";
 			glutPostRedisplay();
 			return;
 		case GLUT_KEY_F8:
+			if ( !m_bIboxEnabled ) {
+				return;
+			}
 			for (size_t idx = 0; idx < m_boxes.size(); idx++) {
 				m_boxes[idx].switchLimit();
 			}
 			return;
 		case GLUT_KEY_F7:
+			if ( !m_bIboxEnabled ) {
+				return;
+			}
 			for (size_t idx = 0; idx < m_boxes.size(); idx++) {
 				m_boxes[idx].switchHint();
+			}
+			glutPostRedisplay();
+			return;
+		case GLUT_KEY_F3: // duplicate current selection box
+			if ( !m_bIboxEnabled ) {
+				return;
+			}
+			if (0 == duplicateBox(10,10,10)) {
+				m_cout << "A box duplicated and added.\n";
+			}
+			glutPostRedisplay();
+			return;
+		case GLUT_KEY_F4: // remove current selection box
+			if ( !m_bIboxEnabled ) {
+				return;
+			}
+			if (0 == removeBox() ) {
+				m_cout << "Box removed.\n";
 			}
 			glutPostRedisplay();
 			return;
@@ -317,7 +357,6 @@ void CGLIBoxApp::specialResponse(int key, int x, int y)
 	CGLApp::specialResponse(key, x, y);
 }
 
-<<<<<<< HEAD
 void CGLIBoxApp::mouseResponse(int button, int state, int x, int y)
 {
 	if ( !m_bIboxEnabled ) {
@@ -357,8 +396,6 @@ void CGLIBoxApp::mouseResponse(int button, int state, int x, int y)
 	return;
 }
 
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 void CGLIBoxApp::mouseMotionResponse(int x, int y)
 {
 	if ( !m_bIboxEnabled || -1 == m_curselboxidx ) {
@@ -398,18 +435,17 @@ void CGLIBoxApp::mousePassiveMotionResponse(int x, int y)
 	}
 }
 
-<<<<<<< HEAD
 void CGLIBoxApp::onReshape( GLsizei w, GLsizei h )
 {
 	// boxes should also be reset 
 	if (m_bFirstReshape) {
-		_updateDefaultLayout();
+		if ( m_bIboxEnabled ) {
+			_updateDefaultLayout();
+		}
 	}
 	CGLApp::onReshape(w, h);
 }
 
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 void CGLIBoxApp::display ( void )
 {
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );

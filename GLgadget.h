@@ -42,7 +42,6 @@
 //	@Mar. 2nd
 //		.add viewport ratio to ease further the setting of gadget viewport
 //		.add fvoy customization considering the need of specific gadget
-<<<<<<< HEAD
 //	@Mar. 9th
 //		.add help prompt gadget which will be popping up to show help message
 //		in a rectangular text box during the user interaction; it supports
@@ -60,8 +59,17 @@
 //		.DEFAULT_FONT_HEIGHT, the character height MACRO, is changed to be
 //		member of CGLTextbox since its descendants may want a different value
 //		for it
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
+//	@Mar. 11th
+//		.isPrompt() as a trivial accessory member is added.
+//		For programming-wise consistency, the prompt like "press ... to start"
+//		is also taken as a task in CGLTaskbox, but actually when the triggering
+//		key is pressed, the response when current "task" is the prompt should
+//		not be the same as that when it is a real task.
+//		.Improve the help text by fixing the bug that the text can be flickering 
+//		during the redrawing of the whole scene because of the use of
+//		swap(m_color[0], m_color[2]) in CGLTextbox::draw(). It is found then the
+//		adverse effect stems from the alternating coloring in between each two
+//		update of scene, i.e. between each two redrawing
 //
 // Copyright(C) 2011-2012 Haipeng Cai
 //
@@ -72,12 +80,9 @@
 #include <stdint.h>
 
 #include <iostream>
-<<<<<<< HEAD
 #include <string>
 #include <vector>
 #include <fstream>
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 
 #include <GL/glut.h>
 #include "glrand.h"
@@ -285,7 +290,6 @@ private:
 	int _place_a_vertex(int vertexIndex, GLfloat x, GLfloat y, GLfloat z);
 };
 
-<<<<<<< HEAD
 /*
  * this class will show interaction prompt on the screen in the way that the
  * text is shown in a rectangular area whose width is up to the maximal length
@@ -367,6 +371,8 @@ public:
 
 	bool iscovered() const;
 
+	bool isPrompt() const;
+
 private:
 	// if show a cover behind the task box
 	bool m_bShowCover;
@@ -380,8 +386,6 @@ protected:
 };
 
 
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 #endif // _GLGADGET_H_
 
 /* set ts=4 sts=4 tw=80 sw=4 */

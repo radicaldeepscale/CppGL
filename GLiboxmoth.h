@@ -23,14 +23,30 @@
 //				F8 for switching stretching limit,
 //				F7 for switching hint feature
 //			are added.
-//			3. add hotkey 'b' for random changing of selection box frames
-<<<<<<< HEAD
+//			3. add hotkey 'b' for random changing of selection box frame colors
 //	@Mar. 6th
 //			1.in order to ease the implementation of GLUT-multiple-window based
 //			CMitubeRender, display() and onReshape() are changed from being
 //			"protected" to be "public" in the access control
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
+//	@Mar. 10th
+//			1.Extending interaction: 'a' for adding a new selection box by
+//			cloning the most recently selected box; 'e' for erasing recently 
+//			selected box; if no box ever selected, use recently highlighted 
+//			one, if no either, act upon the last one in the box store
+//	@Mar. 11th
+//			1.removeBox() will delete even the only one box in the store
+//			2.duplicateBox() will addBox() even the store is empty then
+//			3.keyboard mapping for runtime selection box adding / removing
+//			changed to:
+//				F3 for adding a box (at most 10 boxes are permitted for now
+//				F4 for removing a box (can delete until the box store depletes
+//			4.Disable all box-related operations when m_bIboxEnabled is unset
+//	@Mar. 12th
+//			1.either in duplicateBox or removeBox, the existing box to refer as
+//			the source from which to duplicate or target to remove should be
+//			determined firstly by whether it is highlighted then if it is
+//			selected since highlighting a box is more frequent to happen because
+//			the user needs not to click but simply hover upon a face of the box
 //
 // Copyright(C) 2011-2012 Haipeng Cai
 //
@@ -110,11 +126,22 @@ protected:
 	/*
 	 * @brief remove a specific selection box from the box store
 	 * @param idx an integer giving the index of selection box to be removed in
-	 *		the selection box store
+	 *		the selection box store; -1, as the default, means to remove the
+	 *		most recently selected or, if no ever selected, highlighted one
 	 * @return 0 for success and -1 otherwise
 	 * @see addBox
 	 */
-	int removeBox(int idx);
+	int removeBox(int idx=-1);
+
+	/*
+	 * @brief add a new box by cloning most recently selected or, if no ever
+	 * selected, highlighted box
+	 * @param dx,dy,dz displacement along X,Y,Z axis after cloning
+	 *  (0==dx && 0==dy && 0 == dz) indicates using the largest dimension of the
+	 *  source box as the displacement
+	 * @return 0 for success and -1 otherwise
+	 */
+	int duplicateBox(GLdouble dx=0, GLdouble dy=0, GLdouble dz=0);
 
 	/*
 	 * @brief retrieve among the boxes the selected one, which will receive
@@ -184,7 +211,6 @@ protected:
 	 * a practical openGL program has as components
 	 */
 	void glInit( void );
-<<<<<<< HEAD
 	void keyResponse(unsigned char key, int x, int y);
 	void specialResponse(int key, int x, int y);
 	void mouseResponse(int button, int state, int x, int y);
@@ -196,16 +222,6 @@ public:
 	void display ( void );
 
 protected:
-=======
-	void mouseResponse(int button, int state, int x, int y);
-	void onReshape( GLsizei w, GLsizei h );
-	void keyResponse(unsigned char key, int x, int y);
-	void specialResponse(int key, int x, int y);
-	void mouseMotionResponse(int x, int y);
-	void mousePassiveMotionResponse(int x, int y);
-	void display ( void );
-
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	// flags are used to control the visibility of vertices
 	// all boxes should be bound with the same edge flag array, otherwise it
 	// will become a multiple independent single-box selection rather than a

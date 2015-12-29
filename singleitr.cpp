@@ -13,11 +13,8 @@ int main(int argc, char** argv)
 {
 	CSitubeRender sitr(argc, argv);
 	sitr.setGlutInfo(" single DTI model render ");
-<<<<<<< HEAD
 	sitr.setVerinfo("singleitr");
 	sitr.setFullWindow();
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	sitr.run();
 	return 0;
 }

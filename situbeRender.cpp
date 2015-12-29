@@ -15,17 +15,12 @@ using std::ofstream;
 
 //////////////////////////////////////////////////////////////////////////////
 //
-<<<<<<< HEAD
 //	implementation of the Class CSituberRender
 //
 #define _BLOCK_ALL_INPUT \
 	if ( "" != m_strfntask && m_taskbox.iscovered() ) { \
 		return; \
 	}
-=======
-//	implementation of the Class CTuberRender
-//
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 const char* CSitubeRender::SITR_SHM_NAME = "SHM_SITR_INTERACTION";
 CSitubeRender* CSitubeRender::m_psitInstance = NULL;
 CSitubeRender::CSitubeRender(int argc, char **argv) : CGLIBoxApp(argc, argv),
@@ -36,15 +31,13 @@ CSitubeRender::CSitubeRender(int argc, char **argv) : CGLIBoxApp(argc, argv),
 	m_strfnsrc(""),
 	m_strfnobj(""),
 	m_strdwidir(""),
-<<<<<<< HEAD
 	m_strfnhelp(""),
 	m_strfntask(""),
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	m_lod(5),
 	m_nselbox(1),
 	m_bVradius(true),
 	m_bRemovalbased(false),
+	m_bOR(false),
 	m_fAdd(0.5),
 	m_fRadius(0.25),
 	m_fbdRadius(20.0),
@@ -52,33 +45,20 @@ CSitubeRender::CSitubeRender(int argc, char **argv) : CGLIBoxApp(argc, argv),
 	m_fMinSegLen(0xffffffff),
 	m_colorschemeIdx(CLSCHM_ANATOMY_SYMMETRIC),
 	m_bShowDWIImage(true),
-<<<<<<< HEAD
 	m_bShowHelp(true),
 	m_pIntInfo(NULL),
 	m_bSync(false),
 	m_nSiblings(0),
 	m_bSuspended(false)
-=======
-	m_pIntInfo(NULL),
-	m_bSync(true),
-	m_nSiblings(0)
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 {
 	for (int i=0;i<3;++i) {
 		m_maxCoord[i] = -0xffffffff;
 		m_minCoord[i] = 0xffffffff;
 	}
-<<<<<<< HEAD
 
 	addOption('f', true, "input-file-name", "the name of source file"
 			" containing geometry and in the format of tgdata");
 	addOption('d', true, "dwi-b0-dir", "directory holding DWI b0 DICOM images");
-=======
-	setVerinfo("tubeRender");
-
-	addOption('f', true, "input-file-name", "the name of source file"
-			" containing geometry and in the format of tgdata");
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	addOption('g', true, "output-file-name", "the name of target file"
 			" to store the geometry of streamtubes produced");
 	addOption('r', true, "tube-radius", "fixed radius of the tubes"
@@ -87,13 +67,9 @@ CSitubeRender::CSitubeRender(int argc, char **argv) : CGLIBoxApp(argc, argv),
 			" generation, it is expected to impact the smoothness of tubes");
 	addOption('b', true, "box-num", "number of selection box"
 			" which is 1 by default");
-<<<<<<< HEAD
 	addOption('p', true, "prompt-text", "a file of interaction help prompt");
 	addOption('t', true, "task-list", "a file containing a list of "
 			"visualization tasks");
-=======
-	addOption('d', true, "dwi-b0-dir", "directory holding DWI b0 DICOM images");
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 
 	// turn off gadget feature temporarily since we do not want the default X-Y-Z
 	// coordinate system indicator anymore
@@ -477,7 +453,8 @@ int CSitubeRender::loadGeometry()
 
 bool CSitubeRender::isTubeInSelbox(unsigned long lineIdx) 
 {
-	const vector<GLfloat> & line = m_loader.getElement( lineIdx );
+	//const vector<GLfloat> & line = m_loader.getElement( lineIdx );
+	const vector<GLfloat> & line = m_alltubevertices[ lineIdx ];
 	unsigned long szPts = static_cast<unsigned long>( line.size()/6 );
 
 	for (unsigned long idx = 0; idx < szPts; idx++) {
@@ -523,10 +500,7 @@ void CSitubeRender::glInit(void)
 	// info block as the IPC here used
 	if ( m_nSiblings >= 1 ) {
 		glutIdleFunc(_onIdle);
-<<<<<<< HEAD
 		m_bSync = true;
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	}
 }
 
@@ -580,7 +554,6 @@ int CSitubeRender::handleOptions(int optv)
 				return 0;
 			}
 			break;
-<<<<<<< HEAD
 		case 'p':
 			{
 				m_strfnhelp = optarg;
@@ -593,8 +566,6 @@ int CSitubeRender::handleOptions(int optv)
 				return 0;
 			}
 			break;
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 		default:
 			return CGLIBoxApp::handleOptions( optv );
 	}
@@ -603,12 +574,9 @@ int CSitubeRender::handleOptions(int optv)
 
 void CSitubeRender::keyResponse(unsigned char key, int x, int y) 
 {
-<<<<<<< HEAD
 	if ( 32 != key ) {
 		_BLOCK_ALL_INPUT;
 	}
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	if ( m_bSync && m_nSiblings >= 1) {
 		m_pIntInfo->bUpdated = true;
 		m_pIntInfo->key = key;
@@ -624,32 +592,12 @@ void CSitubeRender::keyResponse(unsigned char key, int x, int y)
 	_realkeyResponse(key, x, y);
 }
 
-void CSitubeRender::mouseResponse(int button, int state, int x, int y)
-{
-<<<<<<< HEAD
-	_BLOCK_ALL_INPUT;
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
-	if ( m_bSync && m_nSiblings >= 1) {
-		m_pIntInfo->bUpdated = true;
-		m_pIntInfo->button = button;
-		m_pIntInfo->state = state;
-		m_pIntInfo->x = x;
-		m_pIntInfo->y = y;
-		m_pIntInfo->event = IE_MOUSE_CLICKED;
-		// wait for uniform synchronization across all sibling processes
-		/* -- YES, I DO NOT KNOW WHO THEY ARE, BUT I JUST BROADCAST THE CHANGE
-		 * IN INTERACTION INPUTS I TRIGGERED ---
-		 */
-		return;
-	}
-	CGLIBoxApp::mouseResponse(button, state, x, y);
-}
-
 void CSitubeRender::specialResponse(int key, int x, int y)
 {
-<<<<<<< HEAD
 	_BLOCK_ALL_INPUT;
+	/* following special keys are not suggested to broadcast to other processes
+	 * if any and they are meant to effect for current process only
+	 */
 	switch (key) {
 		case GLUT_KEY_F5:
 			{
@@ -678,28 +626,6 @@ void CSitubeRender::specialResponse(int key, int x, int y)
 				exit(EXIT_SUCCESS);
 			}
 			return;
-		case GLUT_KEY_F1:
-			m_bShowHelp = !m_bShowHelp;
-			glutPostRedisplay();
-			return;
-=======
-	switch (key) {
-		case GLUT_KEY_F5:
-			{
-				m_bSync = !m_bSync;
-				m_cout << "[PID: " << getpid() << 
-					(m_bSync?" ] enter in ":" ] leave ") 
-					<< " synchronization.\n";
-			}
-			return;
-		case GLUT_KEY_PAGE_DOWN: // terminate all siblings as well
-			kill( getpgid(getpid()), SIGUSR2 );
-			return;
-		case GLUT_KEY_END: // terminate current process only
-			cleanup();
-			m_cout << "quit.\n";
-			exit(EXIT_SUCCESS);
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 		default:
 			break;
 	}
@@ -717,15 +643,31 @@ void CSitubeRender::specialResponse(int key, int x, int y)
 		return;
 	}
 
-	CGLIBoxApp::specialResponse(key, x, y);
+	_realSpecialResponse(key, x, y);
+}
+
+void CSitubeRender::mouseResponse(int button, int state, int x, int y)
+{
+	_BLOCK_ALL_INPUT;
+	if ( m_bSync && m_nSiblings >= 1) {
+		m_pIntInfo->bUpdated = true;
+		m_pIntInfo->button = button;
+		m_pIntInfo->state = state;
+		m_pIntInfo->x = x;
+		m_pIntInfo->y = y;
+		m_pIntInfo->event = IE_MOUSE_CLICKED;
+		// wait for uniform synchronization across all sibling processes
+		/* -- YES, I DO NOT KNOW WHO THEY ARE, BUT I JUST BROADCAST THE CHANGE
+		 * IN INTERACTION INPUTS I TRIGGERED ---
+		 */
+		return;
+	}
+	CGLIBoxApp::mouseResponse(button, state, x, y);
 }
 
 void CSitubeRender::mouseMotionResponse(int x, int y)
 {
-<<<<<<< HEAD
 	_BLOCK_ALL_INPUT;
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	if ( m_bSync && m_nSiblings >= 1) {
 		m_pIntInfo->bUpdated = true;
 		m_pIntInfo->x = x;
@@ -742,10 +684,7 @@ void CSitubeRender::mouseMotionResponse(int x, int y)
 
 void CSitubeRender::mousePassiveMotionResponse(int x, int y)
 {
-<<<<<<< HEAD
 	_BLOCK_ALL_INPUT;
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	if ( m_bSync && m_nSiblings >= 1) {
 		m_pIntInfo->bUpdated = true;
 		m_pIntInfo->x = x;
@@ -762,10 +701,7 @@ void CSitubeRender::mousePassiveMotionResponse(int x, int y)
 
 void CSitubeRender::mouseWheelRollResponse(int wheel, int direction, int x, int y)
 {
-<<<<<<< HEAD
 	_BLOCK_ALL_INPUT;
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	if ( m_bSync && m_nSiblings >= 1) {
 		m_pIntInfo->bUpdated = true;
 		m_pIntInfo->wheel = wheel;
@@ -798,6 +734,11 @@ int CSitubeRender::mainstay()
 	setMinMax(m_minCoord[0], m_minCoord[1], m_minCoord[2],
 			m_maxCoord[0], m_maxCoord[1], m_maxCoord[2]);
 
+	// add initial number of selection boxes
+	for (int i=0; i<m_nselbox; ++i) {
+		addBox();
+	}
+
 	// add a color map sphere
 	m_pcmGadget->setVertexCoordRange(
 			( m_minCoord[0] + m_maxCoord[0] )/2.5,
@@ -815,7 +756,6 @@ int CSitubeRender::mainstay()
 	addGadget( m_paxesGagdet );
 	((CAnatomyAxis*)m_paxesGagdet)->setColorScheme( m_colorschemeIdx );
 
-<<<<<<< HEAD
 	// add the help prompt text box if requested
 	if ( "" != m_strfnhelp && m_bShowHelp ) { //yes, requested
 		// we are not that serious to quit just owing to the failure in loading
@@ -826,7 +766,7 @@ int CSitubeRender::mainstay()
 				( m_minCoord[1] + m_maxCoord[1] )/2,
 				( m_minCoord[2] + m_maxCoord[2] )/2);
 			m_helptext.setColor(1.0, 1.0, 0.6);
-			m_helptext.setRasterPosOffset(40, 2);
+			m_helptext.setRasterPosOffset(35, 2);
 		}
 	}
 
@@ -847,10 +787,6 @@ int CSitubeRender::mainstay()
 			m_bGadgetEnabled = false;
 		}
 	}
-=======
-	// turn back on gadget feature 
-	m_bGadgetEnabled = true;
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 
 	// get DWI embedding prepared if requested
 	if ( "" != m_strdwidir ) {// yes, requested 
@@ -866,10 +802,6 @@ int CSitubeRender::mainstay()
 		if  (! m_dcmexplorer.start() ) {
 			return -1;
 		}
-	}
-
-	for (int i=0; i<m_nselbox; ++i) {
-		addBox();
 	}
 
 	setPrjInfo(45.0f, 
@@ -893,14 +825,11 @@ int CSitubeRender::mainstay()
 	signal (SIGTERM, _on_killed);
 	signal (SIGINT, _on_killed);
 
-<<<<<<< HEAD
 	if ( m_bSuspended ) {
 		m_cout << "Event loop entrance suspened.\n";
 		return 0;
 	}
 
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	return	CGLIBoxApp::mainstay();
 }
 
@@ -911,7 +840,6 @@ void CSitubeRender::draw()
 		m_dcmexplorer.display();
 	}
 
-<<<<<<< HEAD
 	// draw help text box if necessary
 	if ( "" != m_strfnhelp && m_bShowHelp ) {
 		m_helptext.display();
@@ -926,8 +854,6 @@ void CSitubeRender::draw()
 		}
 	}
 
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	glPushMatrix();
 	// move the local coordinate system so that the default origin is still
 	// located at the center of the object coordinate system
@@ -938,19 +864,21 @@ void CSitubeRender::draw()
 	*/
 	unsigned long szTotal = m_loader.getSize();
 	for (unsigned long idx = 0; idx < szTotal; ++idx) {
-		/*
-		   if ( !isTubeInSelbox(idx) ) {
-		   continue;
-		   }
-		   */
-		if ( m_bRemovalbased == isLineInBox<GLfloat>( 
-					&m_alltubevertices[idx][0], 
-					m_alltubevertices[idx].size(),
-					6, 3, 
-					-(GLfloat)( m_minCoord[0] + m_maxCoord[0] )/2,
-					-(GLfloat)( m_minCoord[1] + m_maxCoord[1] )/2,
-					-(GLfloat)( m_minCoord[2] + m_maxCoord[2] )/2) ) {
-			continue;
+		if ( m_boxes.size() > 0 ) {
+			if ( m_bOR ) {
+			   if ( m_bRemovalbased == isTubeInSelbox(idx) ) {
+				   continue;
+			   }
+			}
+			else if ( m_bRemovalbased == isLineInBox<GLfloat>( 
+						&m_alltubevertices[idx][0], 
+						m_alltubevertices[idx].size(),
+						6, 3, 
+						-(GLfloat)( m_minCoord[0] + m_maxCoord[0] )/2,
+						-(GLfloat)( m_minCoord[1] + m_maxCoord[1] )/2,
+						-(GLfloat)( m_minCoord[2] + m_maxCoord[2] )/2) ) {
+				continue;
+			}
 		}
 
 		glVertexPointer(3, GL_FLOAT, 0, &m_alltubevertices[idx][0]);
@@ -1007,7 +935,7 @@ void CSitubeRender::onIdle(void)
 			break;
 		case IE_SPECIAL_KEY:
 			{
-				CGLIBoxApp::specialResponse(m_pIntInfo->key, m_pIntInfo->x, m_pIntInfo->y);	
+				_realSpecialResponse(m_pIntInfo->key, m_pIntInfo->x, m_pIntInfo->y);	
 			}
 			break;
 		case IE_MOUSE_CLICKED:
@@ -1057,7 +985,6 @@ void CSitubeRender::setNumberOfSiblings(int n)
 	}
 }
 
-<<<<<<< HEAD
 void CSitubeRender::suspend(bool bSuspend)
 {
 	m_bSuspended = bSuspend;
@@ -1078,8 +1005,6 @@ bool CSitubeRender::switchhelp(bool bon)
 	return ret;
 }
 
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 int CSitubeRender::_initSharedInfo(bool bInit)
 {
 	// create or open the shared memory segment
@@ -1154,7 +1079,12 @@ void CSitubeRender::_realkeyResponse(unsigned char key, int x, int y)
 			}
 			break;
 		case 'r':
+			if ( !m_bIboxEnabled ) {
+				return;
+			}
 			m_bRemovalbased = ! m_bRemovalbased;
+			m_cout << "Enter into " << 
+				(m_bRemovalbased?"removal":"selection") << " mode.\n";
 			break;
 		case 'v':
 			m_bVnormal = ! m_bVnormal;
@@ -1196,8 +1126,9 @@ void CSitubeRender::_realkeyResponse(unsigned char key, int x, int y)
 			break;
 		case 'o':
 			m_bShowDWIImage = !m_bShowDWIImage;
+			m_cout << "DWI Image embedding " << 
+				(m_bShowDWIImage?"on":"off") << "\n";
 			break;
-<<<<<<< HEAD
 		case '0': // possibly we have already occupied the idlefunc callback!
 			return;
 		case 27: // from the interaction standpoint, 
@@ -1209,10 +1140,11 @@ void CSitubeRender::_realkeyResponse(unsigned char key, int x, int y)
 			return;
 		case 32: // Space bar to trigger next task if any
 			if ( "" != m_strfntask ) {
-				if ( m_taskbox.iscovered() ) {
+				if ( m_taskbox.iscovered() && !m_taskbox.isPrompt() ) {
 					m_bIboxEnabled = true;
 					m_bGadgetEnabled = true;
 					m_taskbox.turncover(false);
+					m_cout << "Get into another task.\n";
 				}
 				else {
 					m_taskbox.turncover(true);
@@ -1220,7 +1152,7 @@ void CSitubeRender::_realkeyResponse(unsigned char key, int x, int y)
 						m_bIboxEnabled = false;
 						m_bGadgetEnabled = false;
 					}
-					else {
+					else { // all task listed out already
 						m_bIboxEnabled = true;
 						m_bGadgetEnabled = true;
 						m_taskbox.turncover(false);
@@ -1230,18 +1162,29 @@ void CSitubeRender::_realkeyResponse(unsigned char key, int x, int y)
 			}
 			CGLIBoxApp::keyResponse(key, x, y);
 			return;
-=======
-		case '0': // possibly we have already occupy the idlefunc callback!
-		case 27: // from the interaction standpoint, 
-				 // ESC is not a good choice for exiting, we use PAGE_DOWN
-				 // instead
-			if ( m_nSiblings < 1 ) {
-				CGLIBoxApp::keyResponse(key, x, y);
-			}
-			return;
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 		default:
 			CGLIBoxApp::keyResponse(key, x, y);
+			return;
+	}
+	glutPostRedisplay();
+}
+
+void CSitubeRender::_realSpecialResponse(int key, int x, int y)
+{
+	switch( key ) {
+		case GLUT_KEY_F2:
+			if ( !m_bIboxEnabled ) {
+				return;
+			}
+			m_bOR = !m_bOR;
+			m_cout << "Changed into " << 
+				(m_bOR?"OR":"AND") << " associative pattern.\n";
+			break;
+		case GLUT_KEY_F1:
+			m_bShowHelp = !m_bShowHelp;
+			break;
+		default:
+			CGLIBoxApp::specialResponse(key, x, y);
 			return;
 	}
 	glutPostRedisplay();
@@ -1265,10 +1208,7 @@ void CSitubeRender::_on_killed(int sig)
 		return;
 	}
 	if (m_psitInstance) {
-<<<<<<< HEAD
 		cout << "istubeRender killed.\n";
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 		m_psitInstance->cleanup();
 		exit(EXIT_SUCCESS);
 	}

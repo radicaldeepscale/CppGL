@@ -58,15 +58,29 @@
 //			detecting if the focused face has any of its vertices in window
 //			coordinate got outside the viewport, rather than simply checking if
 //			the mouse click goes beyond the viewport as previously adopted
-<<<<<<< HEAD
 // @Mar. 8th 2011
 //			1.in order to make the behaviour of m_pcout controllable as m_cout
 //			in its hosting container CGLIBoxApp, change this pointer to a plain
 //			MyCout instance; the properties of it will be force to conformed
 //			to that of CGLIBoxApp::m_cout when a CIselbox object is added to its
 //			container, a CGLIBoxApp object
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
+// @Mar. 10th 2011
+//			1.Extra member CIselbox::clone() is added to support run-time
+//			addition or removal of selection box; cloning a selection box is to
+//			duplicate a new box with the same size but with a deviation in terms
+//			of position to help user discern it from the source; for this
+//			purpose, copy constructor of CIselbox ensues
+// @Mar. 11th 2011
+//			1.For correct cloning of CIselbox, default trivial operator = is not
+//			sufficiently secure so is also needed, thus added as well; for this
+//			purpose, copy constructor and operator = are both added to _face_t
+//			as well in the consideration of pointer safety
+// @Mar. 12th 2011
+//			1.Fix a seemingly odd, really inveterate, bug: when wanting to
+//			delete an non-tail box, the operation actually causes all boxes
+//			after it removed;  Long reckoning leads to the bug found in
+//			CIselbox::operator=. this operator will be called indirectly by
+//			CGLIBoxApp::removeBox.
 //
 //
 // Copyright(C) 2011-2012 Haipeng Cai
@@ -81,10 +95,7 @@
 #include <GL/glut.h>
 #include "glrand.h"
 #include "point.h"
-<<<<<<< HEAD
 #include "cppmoth.h"
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 
 class CGLIBoxApp;
 
@@ -105,6 +116,9 @@ typedef struct  _face_t {
 		isSelected = false;
 	}
 
+	_face_t(const _face_t& other);
+	_face_t& operator = (const _face_t& other);
+
 	void setSelected(bool bSelected = false);
 	point_t getNormal() const;
 	point_t getNormalInWincoord() const;
@@ -120,12 +134,11 @@ class CIselbox {
 public:
 	friend class CGLIBoxApp;
 
-<<<<<<< HEAD
 	CIselbox();
+	CIselbox(const CIselbox& other);
 	~CIselbox();
-=======
-	CIselbox(ostream* pcout = &cout);
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
+
+	CIselbox& operator = (const CIselbox& other);
 
 	// tell the position and size of the selection box, as is simply by
 	// indicating the two opposite corners, i.e. (minx, miny, minz) and 
@@ -184,12 +197,11 @@ public:
 	// return the update status
 	bool switchHint();
 
-<<<<<<< HEAD
-	// duplicate a selection box
-	CIselbox* clone();
+	// duplicate a selection box, possibly with shifts
+	// (0==dx && 0==dy && 0==dz) indicates using the largest dimension of the
+	// source box as the displacement
+	CIselbox clone(GLdouble dx=0, GLdouble dy=0, GLdouble dz=0);
 
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 protected:
 	/* 
 	 * since the interaction handling is the major charge of this class, it
@@ -256,11 +268,7 @@ private:
 	GLdouble m_dx, m_dy, m_dz;
 
 	// custom output stream sharing with that of the client
-<<<<<<< HEAD
 	MyCout m_cout;
-=======
-	ostream* m_pcout;
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 
 	// limit on the selection box stretching/moving
 	GLboolean m_bmvlimit;

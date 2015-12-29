@@ -23,23 +23,17 @@
 //		once option handling is finished using getopt.h stuff, reset the
 //		scanning position by optind = 1, this is CRUCIALLY important while
 //		multiple time of call to getopt or getopt_long is needed.
-<<<<<<< HEAD
 //	@Mar. 7th
 //		.setVerinfo is open to be "public", as sounds more reasonable and
 //		extensibly friendly
 //	@Mar. 8th
 //		.make MyCout support timestamp heading each log line
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 //
 // Copyright(C) 2011-2012 Haipeng Cai
 //
 // ----------------------------------------------------------------------------
 #ifndef _CPPMOTH_H_
-<<<<<<< HEAD
 #define _CPPMOTH_H_
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 
 #include <unistd.h>
 #include <stdint.h>
@@ -80,7 +74,6 @@ class CApplication;
 class MyCout : public ostream {
 public:
 	MyCout(bool soff=true, ostream& os=cout);
-<<<<<<< HEAD
 	MyCout(const MyCout& other);
 	
 	void switchoff(bool soff=true);
@@ -94,24 +87,12 @@ public:
 	virtual MyCout& operator << (const char* otherthing);
 	virtual MyCout& operator = (const MyCout& other);
 
-=======
-	
-	void switchoff(bool soff=true);
-	bool isswitchon() const;
-	
-	template <typename _T>
-	MyCout& operator << (_T otherthing);
-	
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	friend class CApplication;
 
 private:
 	bool m_switchoff;
-<<<<<<< HEAD
 	bool m_btime; /* switch of timestamp */
 	bool m_bnewline; /* if a newline started */
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	ostream & m_os;
 };
 
@@ -200,7 +181,6 @@ public:
 				  const char* longname = "", const char* message = "");
 
 	/*
-<<<<<<< HEAD
 	 * @brief explictly designated a string as a remarkable version info
 	 * @param verinfo a string telling what the desired version info is
 	 * @return none
@@ -208,8 +188,6 @@ public:
 	void setVerinfo(const char* verinfo);
 
 	/*
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	 * @brief the skeleton for the main function 
 	 * @param nohv a boolean showing that the any option handling should be
 	 *  proscribed
@@ -256,16 +234,6 @@ protected:
 	 */
 	virtual int handleOptions(int optv);
 
-<<<<<<< HEAD
-=======
-	/*
-	 * @brief explictly designated a string as a remarkable version info
-	 * @param verinfo a string telling what the desired version info is
-	 * @return none
-	 */
-	void setVerinfo(const char* verinfo);
-
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 protected:
 	/* vertatim mirror of the entry arguments main() received from OS */
 	int m_argc;
@@ -316,11 +284,7 @@ private:
 
 };
 
-<<<<<<< HEAD
 #endif // _CPPMOTH_H_
-=======
-#endif
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 
 /*set ts=4 tw=80 sts=4 sw=4*/
 

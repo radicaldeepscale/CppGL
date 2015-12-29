@@ -14,15 +14,12 @@
 //		color encoded on the Y axis and that on the Z axis
 //		2.CLSCHM_ANATOMY_SYMMETRIC mapping but in Lab color space is added as
 //		another choice of coloring
-<<<<<<< HEAD
 //	@Mar. 7th
 //		.Add Hue Ball coloring
 //	@Mar. 8th
 //		.Add the Heuristic orientation color encoding
 //  @Mar. 9th
 //		.Reconstitute coloring schemes, with useless ones removed
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 //
 // Copyright(C) 2011-2012 Haipeng Cai
 //
@@ -37,7 +34,6 @@
 
 using std::ostream;
 using std::map;
-<<<<<<< HEAD
 using std::max;
 using std::min;
 
@@ -53,21 +49,10 @@ typedef enum _colorscheme_t {
 	CLSCHM_HEURISTIC,
 	CLSCHM_ANATOMY_HEURISTIC,
 	CLSCHM_HUE_BALL,
-=======
-
-#define NUM_COLOR_SCHEME 5
-typedef enum _colorscheme_t {
-	CLSCHM_COORDINATE_MAPPING = 0,
-	CLSCHM_YZ_WATERSHED,
-	CLSCHM_ALL_SYMMETRIC,
-	CLSCHM_ANATOMY_SYMMETRIC,
-	CLSCHM_ANATOMY_SYMMETRIC_LAB,
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	CLSCHM_CUSTOM
 }colorscheme_t;
 
 const char* const g_colorschemes[] = {
-<<<<<<< HEAD
 #ifdef _TEST_COLORING_
 	"direct coordinate mapping",
 	"YZ watershed",
@@ -79,13 +64,6 @@ const char* const g_colorschemes[] = {
 	"heuristic",
 	"anatomy heuristic",
 	"hue ball",
-=======
-	"direct coordinate mapping",
-	"YZ watershed",
-	"all symmetric",
-	"anatomy symmetric",
-	"anatomy symmetric in Lab space",
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	"custom" // vacuous scheme
 };
 
@@ -104,11 +82,7 @@ class CColorMapper {
 public:
 
 public:
-<<<<<<< HEAD
 	CColorMapper(int nScheme = CLSCHM_ALL_SYMMETRIC);
-=======
-	CColorMapper(int nScheme = CLSCHM_CUSTOM);
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	~CColorMapper();
 
 	int setColorScheme(int nScheme);
@@ -132,13 +106,8 @@ inline int getNumberOfColorSchemes()
 
 inline int isColorSchemeSupported(int nScheme)
 {
-<<<<<<< HEAD
 	return nScheme >= 0 && 
 		nScheme <= (ARRAY_SIZE(g_colorschemes)-1);
-=======
-	return nScheme >= CLSCHM_COORDINATE_MAPPING && 
-		nScheme <= CLSCHM_CUSTOM;
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 }
 
 inline const char* getColorSchemeName(int nScheme)
@@ -185,7 +154,6 @@ void rgb2lab(const _T& r, const _T& g, const _T& b,
 	xyz2lab(x,y,z,l,a,b1);
 }
 
-<<<<<<< HEAD
 
 template <typename _T>
 void hsv2rgb(const _T& H, const _T& S, const _T& V,
@@ -219,8 +187,6 @@ void hsv2rgb(const _T& H, const _T& S, const _T& V,
 	r += m, g += m, b += m;
 }
 
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 //////////////////////////////////////////////////////////////////////////////
 //
 // in-place template class implementation
@@ -263,7 +229,6 @@ int CColorMapper<_T>::getColor(const _T& x, const _T& y, const _T& z,
 	normalize(r, g, b);
 	
 	switch (m_colorschemeIdx) {
-<<<<<<< HEAD
 #ifdef _TEST_COLORING_
 		case CLSCHM_COORDINATE_MAPPING:
 			/* coloring scheme -1.*/
@@ -271,20 +236,11 @@ int CColorMapper<_T>::getColor(const _T& x, const _T& y, const _T& z,
 		case CLSCHM_YZ_WATERSHED:
 			{
 				/* coloring scheme -2.*/
-=======
-		case CLSCHM_COORDINATE_MAPPING:
-			/* coloring scheme 0.*/
-			break;
-		case CLSCHM_YZ_WATERSHED:
-			{
-				/* coloring scheme 1.*/
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 				r = fabs(r);
 				g = g>0?g:(1.0+g);
 				b = b>0?b:(1.0+b);
 			}
 			break;
-<<<<<<< HEAD
 		case CLSCHM_ANATOMY_SYMMETRIC_LAB:
 			{
 				/* coloring scheme -3.*/
@@ -342,17 +298,11 @@ int CColorMapper<_T>::getColor(const _T& x, const _T& y, const _T& z,
 		case CLSCHM_ALL_SYMMETRIC:
 			{
 				/* coloring scheme 0.*/
-=======
-		case CLSCHM_ALL_SYMMETRIC:
-			{
-				/* coloring scheme 2.*/
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 				r = fabs(r);
 				g = fabs(g);
 				b = fabs(b);
 			}
 			break;
-<<<<<<< HEAD
 		case CLSCHM_HEURISTIC:
 			{
 				/* coloring scheme 1.*/
@@ -471,38 +421,6 @@ int CColorMapper<_T>::getColor(const _T& x, const _T& y, const _T& z,
 		default:
 			cerr << "Unrecognized color encoding.\n";
 			return -1;
-=======
-		case CLSCHM_ANATOMY_SYMMETRIC:
-			{
-				/* coloring scheme 3.*/
-				r = fabs(r);
-				g = (g+1.0)/2.0;
-				//b = (b+1.0)/2.0;
-				b = 1- (b+1.0)/2.0;
-			}
-			break;
-		case CLSCHM_ANATOMY_SYMMETRIC_LAB:
-			{
-				/* coloring scheme 4.*/
-				r = fabs(r);
-				g = (g+1.0)/2.0;
-				b = 1- (b+1.0)/2.0;
-
-				_T l,a,b1;
-				rgb2lab(r,g,b,l,a,b1);
-				r = l, g = a, b = b1;
-				normalize(r, g, b);
-				r = fabs(r);
-				g = (g+1.0)/2.0;
-				b = 1- (b+1.0)/2.0;
-			}
-			break;
-
-		case CLSCHM_CUSTOM:
-		default:
-			// the caller will implement a custom scheme itself
-			return 1;
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	}
 	return 0;
 }

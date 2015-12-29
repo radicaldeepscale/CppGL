@@ -9,18 +9,22 @@ Ctrl+Right Button: zoom in/out object (or box)
 Home             : reset scene
 Page Down        : end the session
 Space            : go to next task
-F10              : toggle box showing 
+F10              : enable/disable boxes
 F9               : toggle box culling
 F8               : toggle box scaling limit
 F7               : toggle front face hint
 F6               : toggle orientation gadget showing
 F5               : toggle synchronization(in multiview mode)
+F4               : remove the most recently visited box
+F3               : add a box by duplicating the most recently visited
+F2               : toggle associate interplay among boxes (AND/OR)
 F1               : toggle interaction prompt text
-o                : toggle DWI image embedding
-p                : previous DWI image
-n                : next DWI image
-m                : alternating color encoding
+b                : randomly change box color
+c                : toggle FA color encoding
 d                : toggle color/monochromatic rendering
 g                : randomly change uniform color
-b                : randomly change box color
+m                : alternating color encoding
+n                : next DWI image
+o                : toggle DWI image embedding
+p                : previous DWI image
 r                : switch between selection/removal mode of box

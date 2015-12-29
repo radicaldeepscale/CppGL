@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// itubeRender.h: load geometry in the format of "tgdata" and then wrap each
+// situbeRender.h: load geometry in the format of "tgdata" and then wrap each
 //					each streamline with rings resembling tubes. 
 //
 //					Note that the tubes produced are not of any anatomical
@@ -44,14 +44,10 @@
 //		DTI model render - simply using m_nSiblings==0 as the boolean
 //		2. add SIGUSR1 handler to receive the notification from parent that one
 //		more sibling process died and thus to cut off the number of alive
-<<<<<<< HEAD
 //		siblings by 1, this is non-trivial since it will help CSitubeRender keep
 //		aware of the latest number of siblings thus make possible the
 //		interaction synchronization will still be correct even some of the
 //		processes terminate on the way
-=======
-//		siblings by 1
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 //	@Mar. 6th
 //		1.Fix the bug that when button is bounced up, the IPC mechanism does not
 //		count when the event dispatching has finished, causing the event to be
@@ -63,21 +59,40 @@
 //		invoke cleanup
 //		3.Change special key response: END to terminate current process,
 //		PAGE_DOWN to terminate all members of the process group
-<<<<<<< HEAD
 //		4.To enhance the flexibility in terms of being managed as
 //		children/component, add a m_bSuspended switch to allow the manager to
 //		postpone the entrance into GL event loop
 //	@Mar. 9th
 //		.add interaction help prompt gadget, a GL textbox; and an extra command
-//		line argument for loading help text from a file
+//		line argument for loading help text from a file; another key mapping is
+//		also added accordingly as a switch of help text box presence:
+//			F1 - switch help text box presence
 //		.add task prompt gadget, a subtyped CGLTextbox; and an extra command
 //		line argument for loading the task list file
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
+//	@Mar. 10th
+//		.for performing visualization tasks, going to the next task as the response
+//		 to Space bar pressing is added
+//		.Before each task is confirmed to start, nothing will be drawn on the
+//		screen except the task box and all other inputs are blocked as well then
+//		except for the Space bar
+//	@Mar. 11th
+//		.Two types of associative relation among all selection boxes are
+//		defined: 
+//			AND pattern - conditions must be met for all boxes (for selection
+//			mode, a fiber is selected only if it goes through all boxes; for
+//			removal mode, a fiber is removed only if it is outside of all
+//			boxes);
+//			OR pattern = conditions need be met for at least one boxes(for
+//			selection mode, a fiber is selected if only one of the boxes covers
+//			it; for removal mode, a fiber is culled if only one of the boxes
+//			excludes it)
+//		and another key shortcut is added accordingly
+//			F2 - switching associative pattern among selection boxes
+//		.Logic in isTubeInSelbox() is changed to be consistent with isLineInBox,
+//		which is actually required to make sure that the selection/removal mode,
+//		either in AND or OR pattern, works correctly geometrically.
 //
 // Copyright(C) 2011-2012 Haipeng Cai
-//
-// glutMainLoopEvent
 //
 // ----------------------------------------------------------------------------
 #ifndef  _SITUBERENDER_H_
@@ -186,8 +201,8 @@ public:
 	int handleOptions(int optv);
 
 	void keyResponse(unsigned char key, int x, int y);
-	void mouseResponse(int button, int state, int x, int y);
 	void specialResponse(int key, int x, int y);
+	void mouseResponse(int button, int state, int x, int y);
 	void mouseMotionResponse(int x, int y);
 	void mousePassiveMotionResponse(int x, int y);
 	void mouseWheelRollResponse(int wheel, int direction, int x, int y);
@@ -200,7 +215,6 @@ public:
 	// interaction input synchronization
 	void setNumberOfSiblings(int n);
 
-<<<<<<< HEAD
 	// update the suspense switch
 	void suspend(bool bSuspend = false);
 
@@ -210,8 +224,6 @@ public:
 	// help text switch
 	bool switchhelp(bool bon);
 
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 private:
 	/* when coloring schemes are all not used, this color is the uniform color
 	 * for all tubes which is customizable in the run-time*/
@@ -236,13 +248,10 @@ private:
 	/* directory holding DWI images to embed when needed, mostly b0 images
 	 */
 	string m_strdwidir;
-<<<<<<< HEAD
 	/* text file containing interaction help prompt */
 	string m_strfnhelp;
 	/* text file holding a list of tasks for a single session */
 	string m_strfntask;
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 
 	/* Level of Detail, the granularity of interpolation in the fabrication of
 	 * streamtube geometry*/
@@ -252,7 +261,10 @@ private:
 
 	/* if use variant radius for tubes */
 	GLboolean			m_bVradius;
+	/* switch between selection and removal mode */
 	GLboolean			m_bRemovalbased;
+	/* switch between AND and OR associative pattern among boxes */
+	GLboolean			m_bOR;
 
 	/* fantastic factor tunning the streamtube generation */
 	GLfloat m_fAdd;
@@ -290,7 +302,6 @@ private:
 	/* DWI Image embedding switch */
 	bool m_bShowDWIImage;
 
-<<<<<<< HEAD
 	/* a help prompt gadget */
 	CGLTextbox m_helptext;
 	/* help text box presence switch */
@@ -299,8 +310,6 @@ private:
 	/* a task prompt gadget */
 	CGLTaskbox m_taskbox;
 
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	/* point to the shared memory structure of interaction information */
 	interaction_info_t* m_pIntInfo;
 
@@ -316,12 +325,9 @@ private:
 	// evil...)
 	static CSitubeRender* m_psitInstance;
 
-<<<<<<< HEAD
 	/* to suspend entrance into GL event loop or to release it to make enter */
 	bool m_bSuspended;
 
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 private:
 
 	/*
@@ -343,6 +349,12 @@ private:
 	 * pressing
 	 */
 	void _realkeyResponse(unsigned char key, int x, int y);
+
+	/*
+	 * @brief this is the real stuff to be invoked as the response to special
+	 * key pressing
+	 */
+	void _realSpecialResponse(int key, int x, int y);
 
 	/*
 	 * @brief treat the signal of SIGUSR1 and then update the number of alive

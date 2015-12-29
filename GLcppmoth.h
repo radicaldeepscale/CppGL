@@ -97,15 +97,12 @@
 //			its derived children classes' destructors will be called
 //			automatically in order only if this parent destructor gets invoked.
 //			This is simply another merit of C++ !
-<<<<<<< HEAD
 // @Mar. 8th
 //			1.add m_bFirstReshape to avoid always resetting everything when the
 //			window is resized since SPACE is already set for this action 
 // @Mar. 10th
 //			1.key stroke aimming at action for resetting changed from Space bar
 //			to Home, which seems to make more sense.
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 //			
 // Copyright(C) 2011-2012 Haipeng Cai
 //
@@ -273,7 +270,6 @@ protected:
 	 * a practical openGL program has as components
 	 */
 	virtual void glInit( void );
-<<<<<<< HEAD
 	virtual void keyResponse(unsigned char key, int x, int y);
 	virtual void specialResponse(int key, int x, int y);
 	virtual void mouseResponse(int button, int state, int x, int y);
@@ -285,19 +281,6 @@ protected:
 	virtual void onIdle( void );
 
 protected:
-=======
-	virtual void mouseResponse(int button, int state, int x, int y);
-	virtual void onReshape( GLsizei w, GLsizei h );
-	virtual void keyResponse(unsigned char key, int x, int y);
-	virtual void specialResponse(int key, int x, int y);
-	virtual void mouseMotionResponse(int x, int y);
-	virtual void mousePassiveMotionResponse(int x, int y);
-	virtual void mouseWheelRollResponse(int wheel, int direction, int x, int y);
-	virtual void display( void );
-	virtual void onIdle( void );
-
-private:
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	// all bunch of GLUT windowing parameters
 	/* window title */
 	string m_wTitle;
@@ -307,10 +290,7 @@ private:
 	int m_width, m_height;
 	/* display mode */
 	int m_dispMode;
-<<<<<<< HEAD
 private:
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	/* if animate by stroking keys randomly */
 	bool m_bAnimated;
 	/* record which mouse button is being pressed, -1 indicates none */
@@ -372,7 +352,6 @@ protected:
 	 *
 	 * note that callbacks must not be non-static class members
 	 */
-<<<<<<< HEAD
 	static void _keyResponse(unsigned char key, int x, int y);
 	static void _specialResponse(int key, int x, int y);
 	static void _mouseResponse(int button, int state, int x, int y);
@@ -380,15 +359,6 @@ protected:
 	static void _mousePassiveMotionResponse(int x, int y);
 	static void _mouseWheelRollResponse(int wheel, int direction, int x, int y);
 	static void _onReshape( GLsizei w, GLsizei h );
-=======
-	static void _mouseResponse(int button, int state, int x, int y);
-	static void _onReshape( GLsizei w, GLsizei h );
-	static void _keyResponse(unsigned char key, int x, int y);
-	static void _specialResponse(int key, int x, int y);
-	static void _mouseMotionResponse(int x, int y);
-	static void _mousePassiveMotionResponse(int x, int y);
-	static void _mouseWheelRollResponse(int wheel, int direction, int x, int y);
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	static void _display( void );
 	static void _onIdle( void );
 
@@ -407,12 +377,9 @@ protected:
 	
 	// switch effect of gadgets
 	GLboolean m_bGadgetEnabled;
-<<<<<<< HEAD
 
 	// flag if it is the 1st time the reshape callback invoked
 	bool m_bFirstReshape;
-=======
->>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 };
 
 #endif // _GLMOTH_H_
