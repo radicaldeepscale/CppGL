@@ -25,8 +25,12 @@ CGLIBoxApp::CGLIBoxApp() : CGLApp(),
 	m_curhlboxidx(-1),
 	m_pvertices(NULL),
 	m_bIboxEnabled(true),
+<<<<<<< HEAD
 	m_bIboxCulling(true) 
 {
+=======
+	m_bIboxCulling(true) {
+>>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 }
 
 CGLIBoxApp::CGLIBoxApp(int argc, char **argv) : CGLApp(argc, argv),
@@ -40,12 +44,19 @@ CGLIBoxApp::CGLIBoxApp(int argc, char **argv) : CGLApp(argc, argv),
 	m_curhlboxidx(-1),
 	m_pvertices(NULL),
 	m_bIboxEnabled(true),
+<<<<<<< HEAD
 	m_bIboxCulling(true) 
 {
 	// in selection box application, gadgets are often needed since
 	// application in this catalog mostly involves 3D interaction
 	m_bGadgetEnabled = true;
 	m_cout.switchtime(true);
+=======
+	m_bIboxCulling(true) {
+		// in selection box application, gadgets are often needed since
+		// application in this catalog mostly involves 3D interaction
+		m_bGadgetEnabled = true;
+>>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 }
 
 CGLIBoxApp::~CGLIBoxApp()
@@ -161,12 +172,19 @@ int CGLIBoxApp::addBox()
 	CIselbox selbox;
 	if ( m_cout.isswitchon() ) {
 		m_cout << "debug output switched on\n";
+<<<<<<< HEAD
 		selbox.m_cout.switchoff(false);
 		selbox.m_cout.switchtime(true);
 	}
 	else {
 		selbox.m_cout.switchoff(true);
 	}	
+=======
+	}
+	else {
+		selbox.m_pcout = &m_cout;
+	}
+>>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	selbox.associateObj(m_pvertices, &m_edgeflags, m_dx, m_dy, m_dz);
 	addBox( selbox );
 	return _updateDefaultLayout();
@@ -205,6 +223,55 @@ void CGLIBoxApp::glInit(void)
 	CGLApp::glInit();
 }
 
+<<<<<<< HEAD
+=======
+void CGLIBoxApp::mouseResponse(int button, int state, int x, int y)
+{
+	if ( !m_bIboxEnabled ) {
+		CGLApp::mouseResponse(button, state, x, y);
+		return;
+	}
+
+	switch (state) {
+	case GLUT_DOWN: 
+		{
+			m_curselboxidx = -1;
+			// the first selection box that accepts the mouse event is regarded
+			// as the currently focused
+			size_t szBoxes = m_boxes.size();
+			for (size_t idx = 0; idx < szBoxes; idx++) {
+				if ( 0 == m_boxes[idx].onMouseClicked(button, state, x, y) ) {
+					m_curselboxidx = idx;
+					return;
+				}
+			}
+		}
+		break;
+	case GLUT_UP:
+		{
+			if ( -1 != m_curselboxidx ) {
+				m_boxes[ m_curselboxidx ].onMouseClicked( 
+						button, state, 0,0);
+				return;
+			}
+		}
+		break;
+	default:
+		break;
+	}
+
+	CGLApp::mouseResponse(button, state, x, y);
+	return;
+}
+
+void CGLIBoxApp::onReshape( GLsizei w, GLsizei h )
+{
+	CGLApp::onReshape(w, h);
+	// boxes should also be reset 
+	_updateDefaultLayout();
+}
+
+>>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 void CGLIBoxApp::keyResponse(unsigned char key, int x, int y)
 {
 	switch (key) {
@@ -250,6 +317,7 @@ void CGLIBoxApp::specialResponse(int key, int x, int y)
 	CGLApp::specialResponse(key, x, y);
 }
 
+<<<<<<< HEAD
 void CGLIBoxApp::mouseResponse(int button, int state, int x, int y)
 {
 	if ( !m_bIboxEnabled ) {
@@ -289,6 +357,8 @@ void CGLIBoxApp::mouseResponse(int button, int state, int x, int y)
 	return;
 }
 
+=======
+>>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 void CGLIBoxApp::mouseMotionResponse(int x, int y)
 {
 	if ( !m_bIboxEnabled || -1 == m_curselboxidx ) {
@@ -328,6 +398,7 @@ void CGLIBoxApp::mousePassiveMotionResponse(int x, int y)
 	}
 }
 
+<<<<<<< HEAD
 void CGLIBoxApp::onReshape( GLsizei w, GLsizei h )
 {
 	// boxes should also be reset 
@@ -337,6 +408,8 @@ void CGLIBoxApp::onReshape( GLsizei w, GLsizei h )
 	CGLApp::onReshape(w, h);
 }
 
+=======
+>>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 void CGLIBoxApp::display ( void )
 {
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );

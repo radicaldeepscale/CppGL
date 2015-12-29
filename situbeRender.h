@@ -44,10 +44,14 @@
 //		DTI model render - simply using m_nSiblings==0 as the boolean
 //		2. add SIGUSR1 handler to receive the notification from parent that one
 //		more sibling process died and thus to cut off the number of alive
+<<<<<<< HEAD
 //		siblings by 1, this is non-trivial since it will help CSitubeRender keep
 //		aware of the latest number of siblings thus make possible the
 //		interaction synchronization will still be correct even some of the
 //		processes terminate on the way
+=======
+//		siblings by 1
+>>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 //	@Mar. 6th
 //		1.Fix the bug that when button is bounced up, the IPC mechanism does not
 //		count when the event dispatching has finished, causing the event to be
@@ -59,6 +63,7 @@
 //		invoke cleanup
 //		3.Change special key response: END to terminate current process,
 //		PAGE_DOWN to terminate all members of the process group
+<<<<<<< HEAD
 //		4.To enhance the flexibility in terms of being managed as
 //		children/component, add a m_bSuspended switch to allow the manager to
 //		postpone the entrance into GL event loop
@@ -67,6 +72,8 @@
 //		line argument for loading help text from a file
 //		.add task prompt gadget, a subtyped CGLTextbox; and an extra command
 //		line argument for loading the task list file
+=======
+>>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 //
 // Copyright(C) 2011-2012 Haipeng Cai
 //
@@ -193,6 +200,7 @@ public:
 	// interaction input synchronization
 	void setNumberOfSiblings(int n);
 
+<<<<<<< HEAD
 	// update the suspense switch
 	void suspend(bool bSuspend = false);
 
@@ -202,6 +210,8 @@ public:
 	// help text switch
 	bool switchhelp(bool bon);
 
+=======
+>>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 private:
 	/* when coloring schemes are all not used, this color is the uniform color
 	 * for all tubes which is customizable in the run-time*/
@@ -226,10 +236,13 @@ private:
 	/* directory holding DWI images to embed when needed, mostly b0 images
 	 */
 	string m_strdwidir;
+<<<<<<< HEAD
 	/* text file containing interaction help prompt */
 	string m_strfnhelp;
 	/* text file holding a list of tasks for a single session */
 	string m_strfntask;
+=======
+>>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 
 	/* Level of Detail, the granularity of interpolation in the fabrication of
 	 * streamtube geometry*/
@@ -277,6 +290,7 @@ private:
 	/* DWI Image embedding switch */
 	bool m_bShowDWIImage;
 
+<<<<<<< HEAD
 	/* a help prompt gadget */
 	CGLTextbox m_helptext;
 	/* help text box presence switch */
@@ -285,6 +299,8 @@ private:
 	/* a task prompt gadget */
 	CGLTaskbox m_taskbox;
 
+=======
+>>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	/* point to the shared memory structure of interaction information */
 	interaction_info_t* m_pIntInfo;
 
@@ -300,9 +316,12 @@ private:
 	// evil...)
 	static CSitubeRender* m_psitInstance;
 
+<<<<<<< HEAD
 	/* to suspend entrance into GL event loop or to release it to make enter */
 	bool m_bSuspended;
 
+=======
+>>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 private:
 
 	/*

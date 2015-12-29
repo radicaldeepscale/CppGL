@@ -42,6 +42,7 @@
 //	@Mar. 2nd
 //		.add viewport ratio to ease further the setting of gadget viewport
 //		.add fvoy customization considering the need of specific gadget
+<<<<<<< HEAD
 //	@Mar. 9th
 //		.add help prompt gadget which will be popping up to show help message
 //		in a rectangular text box during the user interaction; it supports
@@ -59,6 +60,8 @@
 //		.DEFAULT_FONT_HEIGHT, the character height MACRO, is changed to be
 //		member of CGLTextbox since its descendants may want a different value
 //		for it
+=======
+>>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 //
 // Copyright(C) 2011-2012 Haipeng Cai
 //
@@ -69,9 +72,12 @@
 #include <stdint.h>
 
 #include <iostream>
+<<<<<<< HEAD
 #include <string>
 #include <vector>
 #include <fstream>
+=======
+>>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 
 #include <GL/glut.h>
 #include "glrand.h"
@@ -279,6 +285,7 @@ private:
 	int _place_a_vertex(int vertexIndex, GLfloat x, GLfloat y, GLfloat z);
 };
 
+<<<<<<< HEAD
 /*
  * this class will show interaction prompt on the screen in the way that the
  * text is shown in a rectangular area whose width is up to the maximal length
@@ -373,6 +380,8 @@ protected:
 };
 
 
+=======
+>>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 #endif // _GLGADGET_H_
 
 /* set ts=4 sts=4 tw=80 sw=4 */

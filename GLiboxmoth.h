@@ -24,10 +24,13 @@
 //				F7 for switching hint feature
 //			are added.
 //			3. add hotkey 'b' for random changing of selection box frames
+<<<<<<< HEAD
 //	@Mar. 6th
 //			1.in order to ease the implementation of GLUT-multiple-window based
 //			CMitubeRender, display() and onReshape() are changed from being
 //			"protected" to be "public" in the access control
+=======
+>>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 //
 // Copyright(C) 2011-2012 Haipeng Cai
 //
@@ -181,6 +184,7 @@ protected:
 	 * a practical openGL program has as components
 	 */
 	void glInit( void );
+<<<<<<< HEAD
 	void keyResponse(unsigned char key, int x, int y);
 	void specialResponse(int key, int x, int y);
 	void mouseResponse(int button, int state, int x, int y);
@@ -192,6 +196,16 @@ public:
 	void display ( void );
 
 protected:
+=======
+	void mouseResponse(int button, int state, int x, int y);
+	void onReshape( GLsizei w, GLsizei h );
+	void keyResponse(unsigned char key, int x, int y);
+	void specialResponse(int key, int x, int y);
+	void mouseMotionResponse(int x, int y);
+	void mousePassiveMotionResponse(int x, int y);
+	void display ( void );
+
+>>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	// flags are used to control the visibility of vertices
 	// all boxes should be bound with the same edge flag array, otherwise it
 	// will become a multiple independent single-box selection rather than a

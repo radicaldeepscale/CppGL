@@ -117,7 +117,10 @@ void CGLGadget::display()
 	glDisable(GL_LIGHTING);
 	glDisable(GL_LIGHT0);
 
+<<<<<<< HEAD
 	//cout << "USED: (" << m_left << "," << m_bottom << ") - (" << m_width << "," << m_height << ")\n";
+=======
+>>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 	glViewport(m_left, m_bottom, m_width, m_height);
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
@@ -712,6 +715,7 @@ int CSphereColorMap::_place_a_vertex(int vertexIndex, GLfloat x, GLfloat y, GLfl
 	return 0;
 }
 
+<<<<<<< HEAD
 ///////////////////////////////////////////////////////////////////////////////
 //
 // implementation of the CGLTextbox class
@@ -1032,5 +1036,7 @@ void CGLTaskbox::_drawcover()
 	glPopAttrib();
 }
 
+=======
+>>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 /* set ts=4 sts=4 tw=80 sw=4 */
 

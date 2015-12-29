@@ -58,12 +58,15 @@
 //			detecting if the focused face has any of its vertices in window
 //			coordinate got outside the viewport, rather than simply checking if
 //			the mouse click goes beyond the viewport as previously adopted
+<<<<<<< HEAD
 // @Mar. 8th 2011
 //			1.in order to make the behaviour of m_pcout controllable as m_cout
 //			in its hosting container CGLIBoxApp, change this pointer to a plain
 //			MyCout instance; the properties of it will be force to conformed
 //			to that of CGLIBoxApp::m_cout when a CIselbox object is added to its
 //			container, a CGLIBoxApp object
+=======
+>>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 //
 //
 // Copyright(C) 2011-2012 Haipeng Cai
@@ -78,7 +81,10 @@
 #include <GL/glut.h>
 #include "glrand.h"
 #include "point.h"
+<<<<<<< HEAD
 #include "cppmoth.h"
+=======
+>>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 
 class CGLIBoxApp;
 
@@ -114,8 +120,12 @@ class CIselbox {
 public:
 	friend class CGLIBoxApp;
 
+<<<<<<< HEAD
 	CIselbox();
 	~CIselbox();
+=======
+	CIselbox(ostream* pcout = &cout);
+>>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 
 	// tell the position and size of the selection box, as is simply by
 	// indicating the two opposite corners, i.e. (minx, miny, minz) and 
@@ -174,9 +184,12 @@ public:
 	// return the update status
 	bool switchHint();
 
+<<<<<<< HEAD
 	// duplicate a selection box
 	CIselbox* clone();
 
+=======
+>>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 protected:
 	/* 
 	 * since the interaction handling is the major charge of this class, it
@@ -243,7 +256,11 @@ private:
 	GLdouble m_dx, m_dy, m_dz;
 
 	// custom output stream sharing with that of the client
+<<<<<<< HEAD
 	MyCout m_cout;
+=======
+	ostream* m_pcout;
+>>>>>>> 1693f3f78e2f49c6d036f0eb918cf02057f163bf
 
 	// limit on the selection box stretching/moving
 	GLboolean m_bmvlimit;
